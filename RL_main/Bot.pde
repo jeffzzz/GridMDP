@@ -6,7 +6,8 @@ class Bot {
   float summed_reward;
   float alpha; // learning rate
   float gamma; // discount factor
-  float epsilon; // epsilon-greedy parameter
+  int Ne; //exploration threshold
+  float Rp; //exploration reward
   float[][][] Q;
   int [][][] action_counts;
   float step_count;
@@ -17,7 +18,7 @@ class Bot {
     action_counts = new int[maze.ny][maze.ny][4];
     alpha = 1.0;
     gamma = 0.99;
-    epsilon = 0.05;
+    Rp = 2.9;
     reset();
   }
 
@@ -77,7 +78,7 @@ class Bot {
     a1 = pickAction();
     action_counts[s0y][s0x][a0]++;
     //alpha = 10000.0 / (9999.0 + 0.1*step_count);
-    alpha = 60.0 / (59.0 + action_counts[s0y][s0x][a0];
+    alpha = 6000.0 / (6000.0 + action_counts[s0y][s0x][a0]);
     Q[s0y][s0x][a0] = Q[s0y][s0x][a0] + alpha * (reward + gamma * Q[s1y][s1x][a1] - Q[s0y][s0x][a0]);
     }
   }
@@ -87,20 +88,26 @@ class Bot {
     float max = -999.0;
     float prob = random(1.0);
     float utility;
+    float backup;
     int explore_count = 0;
     int [] explore = {0,0,0,0};
     for(int i = 0; i < 4; i++){
-        if (action_counts[statey][statex][i] < 10){
-          utility = 2.0;
+        if (action_counts[statey][statex][i] < Ne){
+          utility = Rp;
           explore[explore_count] = i;
           explore_count++;
         }
         else
           utility = Q[statey][statex][i];
+          
+        backup = Q[statey][statex][i];
         
         if (explore_count > 0){
           float p = random(explore_count);
           action = explore[int(p)];
+          float temp = random(1.0);
+          if ((temp < 0.8) && (backup >= 3.0))
+            action = i;
         }
         else {
           if (utility >= max){
