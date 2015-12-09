@@ -13,7 +13,7 @@ class GridWorld:
         self.right = right
         self.map = grid_map
         self.counter = 0
-        self.discount = .99     # gamma in the equation
+        self.discount = .7     # gamma in the equation
         self.util_map = [[0.0 for _ in range(0, 6)] for _ in range(0, 6)]        # probably should have made a tuple instead of seperate maps
         self.reward_map = [[-.04 for _ in range(0, 6)] for _ in range(0, 6)]
         self.policy_map = [['' for _ in range(0, 6)] for _ in range(0, 6)]
@@ -76,7 +76,7 @@ class GridWorld:
             self.util_map = next_util_map
             self.counter += 1
             self.iter = np.append(self.counter,self.iter)
-            logger.info(self.util_map)
+            #logger.info(self.util_map)
             #logger.info(self.max_map)
             #logger.info(self.reward_map)
            # logger.info(self.policy_map)
@@ -84,7 +84,6 @@ class GridWorld:
             #logger.info(next_util_map)
 
            # logger.info(self.util_map[0][0])
-        logger.info(self.counter)
         logger.info(self.util_map)
         logger.info(self.policy_map)
         plt.plot(self.iter, self.utillist1,'b-')
@@ -192,9 +191,8 @@ class GridWorld:
                                     north_wall, east_wall, south_wall, west_wall, rowval, colval)
 
            # logger.info(max_val)
-            #logger.info(self.counter)
-        if(rowval == 0 and colval == 0):
-            logger.info(max_val)
+       # if(rowval == 0 and colval == 0):
+            #logger.info(max_val)
         return max_val
 
     def calc_dir(self, north, east, south, west, north_wall, east_wall, south_wall, west_wall, rowval, colval):
